@@ -1,0 +1,16 @@
+{
+  "name": "Winted Studio",
+  "short_name": "Winted",
+  "start_url": "./Winted_Studio.html",
+  "display": "standalone",
+  "background_color": "#1f2937",
+  "theme_color": "#1f2937",
+  "description": "Code & Markdown Editor de Winted Studios.",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}
