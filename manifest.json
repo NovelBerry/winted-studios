@@ -8,9 +8,9 @@
   "description": "Code & Markdown Editor de Winted Studios.",
   "icons": [
     {
-      "src": "icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
+      "src": "WINTED-STUDIO.jpg",  /* ¡Nombre del icono actualizado aquí! */
+      "sizes": "192x192",         /* Asegúrese de que la imagen sea 192x192 píxeles */
+      "type": "image/jpeg"        /* ¡Tipo de imagen actualizado a JPEG! */
     }
   ]
 }
