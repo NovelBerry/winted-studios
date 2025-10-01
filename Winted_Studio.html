@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Winted Studio (Code & Markdown)</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+    <style>
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1f2937; }
+        ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+
+ 
+        #preview {
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+            color: #d1d5db; 
+        }
+        
+
+        #preview pre {
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 0.375rem; 
+            overflow-x: auto;
+        }
+
+      
+        #preview h1 { border-bottom: 2px solid #374151; padding-bottom: 0.5rem; margin-top: 1.5rem; }
+        #preview h2 { border-bottom: 1px solid #374151; padding-bottom: 0.3rem; margin-top: 1.25rem; }
+
+
+        #editor {
+            resize: none; 
+            font-family: 'Consolas', 'Monospace', monospace; 
+            font-size: 14px;
+        }
+
+    </style>
+</head>
+
+<body class="bg-gray-900 text-white overflow-hidden h-screen">
+
+    <div id="setup-modal" class="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center">
+        <div class="bg-gray-800 text-white rounded-lg shadow-2xl w-full max-w-sm border-t-4 border-blue-500">
+            <div class="p-6">
+                <div class="flex items-center space-x-4">
+                    <svg class="w-10 h-10 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <div>
+                        <p class="font-bold text-lg">Control de cuenta de usuario</p>
+                        <p class="text-gray-400 text-sm">¿Quieres permitir que **Winted Studio** haga cambios en este dispositivo?</p>
+                    </div>
+                </div>
+                
+                <div class="mt-4 text-sm bg-gray-700 p-3 rounded">
+                    <p class="font-medium">Nombre de la aplicación: <span class="text-blue-300">Winted Studio</span></p>
+                    <p class="font-medium">Fabricante verificado: <span class="text-blue-300">Winted Studios</span></p>
+                    <p class="text-xs text-gray-500 mt-1">Esta acción es necesaria para inicializar el entorno de edición.</p>
+                </div>
+            </div>
+            <div class="flex justify-end p-4 bg-gray-700 rounded-b-lg">
+                <button onclick="document.getElementById('setup-modal').style.display = 'none';" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded text-white font-medium shadow-md">
+                    Sí (Permitir el inicio)
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="flex h-full">
+        
+        <div class="w-1/2 h-full p-4 border-r border-gray-700">
+            <h3 class="text-gray-400 text-xs uppercase mb-2 font-semibold tracking-wider">Editor de Entrada (Markdown/Código)</h3>
+            <textarea id="editor" class="w-full h-full p-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-blue-500 text-gray-200"
+                placeholder="# Título Principal
+
+¡Bienvenido a Winted Studio! 
+Escribe tu **Markdown** y bloques de **Código** aquí.
+
+---
+
+## Bloque de Código de Ejemplo (Python)
+
+Especifica el lenguaje después de los tres acentos graves:
+
+\`\`\`python
+def factorial(n):
+    if n == 0:
+        return 1
+    else:
+        return n * factorial(n-1)
+
+# Llama a la función
+resultado = factorial(5)
+print(f'El factorial es: {resultado}')
+\`\`\`
+
+## Bloque de Código de Ejemplo (JavaScript)
+
+\`\`\`javascript
+const WintedStudio = {
+    app: 'Code & Markdown Studio',
+    version: 1.0,
+    sayHello: () => console.log('Winted Studio Ready!')
+};
+
+WintedStudio.sayHello();
+\`\`\`"
+            ></textarea>
+        </div>
+
+        <div class="w-1/2 h-full p-4 overflow-y-auto">
+            <h3 class="text-gray-400 text-xs uppercase mb-2 font-semibold tracking-wider">Vista Previa en Tiempo Real</h3>
+            <div id="preview" class="p-3 bg-gray-800 border border-gray-700 rounded-lg min-h-full">
+                </div>
+        </div>
+    </div>
+
+    <script>
+        const editor = document.getElementById('editor');
+        const preview = document.getElementById('preview');
+
+        
+        marked.setOptions({
+           
+            sanitize: false, 
+            highlight: function(code, lang) {
+                const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+                return hljs.highlight(code, { language }).value;
+            }
+        });
+
+      
+        function renderMarkdown() {
+          
+            const html = marked.parse(editor.value);
+            
+        
+            preview.innerHTML = html;
+            
+
+            hljs.highlightAll(); 
+        }
+
+ 
+        editor.addEventListener('input', renderMarkdown);
+
+
+        window.onload = () => {
+
+             setTimeout(() => {
+                 const modal = document.getElementById('setup-modal');
+                 if (modal && modal.style.display !== 'none') {
+                     modal.style.display = 'none';
+                 }
+             }, 2000); 
+
+
+            renderMarkdown();
+        };
+
+    </script>
+</body>
+</html>
